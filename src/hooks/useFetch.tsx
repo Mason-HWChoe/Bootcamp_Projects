@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 
-interface Item {
+export interface Item {
   contentId: number;
   facltNm: string;
   lineIntro: string;
@@ -85,7 +85,7 @@ interface Item {
   modifiedtime: string;
 }
 
-interface ApiResponse {
+export interface ApiResponse {
   response: {
     body: {
       totalCount: number;
@@ -96,7 +96,11 @@ interface ApiResponse {
   };
 }
 
-export const useFetch = (url: string) => {
+export const useFetch = (
+  url: string,
+  currentPage?: number,
+  itemsPerPage?: number,
+) => {
   const [data, setData] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -104,9 +108,11 @@ export const useFetch = (url: string) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data: AxiosResponse<ApiResponse> = await axios.get(url);
-        const { totalCount, items } = data.data.response.body;
-        // console.log(totalCount);
+        const updatedUrl = `${url}&numOfRows=${itemsPerPage}&pageNo=${currentPage}`;
+        const response: AxiosResponse<ApiResponse> = await axios.get(
+          updatedUrl,
+        );
+        const { totalCount, items } = response.data.response.body;
         setData(items.item);
         setTotalCount(totalCount);
         setIsLoading(false);
@@ -115,8 +121,9 @@ export const useFetch = (url: string) => {
         setIsLoading(false);
       }
     };
+
     fetchData();
-  }, [url]);
+  }, [url, currentPage, itemsPerPage]);
 
   return { data, isLoading, totalCount };
 };

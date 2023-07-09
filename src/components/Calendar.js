@@ -16,7 +16,11 @@ export default function MyCalendar() {
     return weekdays[orderedIndex];
   };
 
-  const locale = ko;
+  const locale = ko.code;
+
+  const formatDay = (locale, date) => {
+    return date.getDate().toString();
+  };
 
   return (
     <div>
@@ -26,6 +30,7 @@ export default function MyCalendar() {
         formatShortWeekday={formatShortWeekday}
         value={value}
         onChange={onChange}
+        formatDay={formatDay}
       />
     </div>
   );
