@@ -1,0 +1,63 @@
+.containerBackground {
+  background-image: url(../../public/camping04.webp);
+  background-size: cover;
+  background-position: center;
+}
+
+.searchedItemsCount {
+  color: orange;
+}
+
+.horizonLine {
+  border: none;
+  height: 3px;
+  background-color: black;
+}
+
+.searchedListContainer {
+  background-color: #f8fcfe;
+}
+
+.imgWrapper {
+  width: 275px;
+  height: 195px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.thumbnailImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.description {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 55rem;
+}
+
+.address,
+.telephone {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: contain;
+}
+
+.address {
+  background-image: url('../../public/location.png');
+}
+
+.telephone {
+  background-image: url('../../public/telephone.png');
+}
+
+.facilityListContainer {
+  padding: 20px;
+  width: 90%;
+  height: auto;
+}

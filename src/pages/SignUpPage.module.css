@@ -1,0 +1,20 @@
+.signUpContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  height: 60%;
+}
+
+.idCheck {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.passwordMessage {
+  font-size: 12px;
+  color: red;
+  padding-left: 10px;
+}

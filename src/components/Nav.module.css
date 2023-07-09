@@ -1,0 +1,25 @@
+.navContainer {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 80px;
+}
+
+.customLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.customLink:hover {
+  color: inherit;
+}

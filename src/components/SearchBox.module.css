@@ -1,0 +1,48 @@
+.absolute {
+  background-color: orange;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 35em;
+  height: 15em;
+  color: black;
+  z-index: 100;
+  opacity: 0.9;
+}
+
+.relative {
+  background-color: orange;
+  position: relative;
+  width: 35em;
+  height: 15em;
+  color: black;
+  z-index: 100;
+  opacity: 0.9;
+}
+
+.keywordSearch {
+  margin: 3rem 1rem 1rem 2rem;
+}
+
+.search {
+  margin: 3rem 2rem 1rem 0;
+}
+
+.regionSearch,
+.themeSearch {
+  margin: 0 1rem 1rem 2rem;
+}
+
+.selectProvince,
+.selectTheme {
+  margin: 0 1rem 1rem 0;
+}
+
+.selectCity {
+  margin: 0 2rem 1rem 1rem;
+}
+
+.searchBtn {
+  width: 11.6em;
+}

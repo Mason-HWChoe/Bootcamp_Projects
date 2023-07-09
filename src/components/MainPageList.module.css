@@ -1,0 +1,27 @@
+.recommendContainer {
+  margin: 30px 30px;
+  padding: 10px;
+  background-color: #fffaef;
+}
+
+.imgWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
+  overflow: auto;
+}
+
+.description {
+  height: 120px;
+  overflow-y: scroll;
+}
+
+.customLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.customLink:hover {
+  color: inherit;
+}
