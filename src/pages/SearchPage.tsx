@@ -4,6 +4,7 @@ import MyCalendar from '../components/Calendar';
 import Footer from '../components/Footer';
 import SearchBox from '../components/SearchBox';
 import { Item, useFetch } from '../hooks/useFetch';
+import { useSelectedDataContext } from '../store/SelectedItemsContext';
 import styles from './SearchPage.module.css';
 
 export default function SearchPage() {
@@ -22,6 +23,7 @@ export default function SearchPage() {
   );
   const totalPages = Math.ceil(totalCount / itemsPerPage);
   const [datas, setDatas] = useState<Item[]>(data);
+  const { selectedData, setSelectedData } = useSelectedDataContext();
 
   useEffect(() => {
     setDatas(data);
@@ -30,6 +32,10 @@ export default function SearchPage() {
   useEffect(() => {
     scrollRef.current?.scrollTo(0, 0);
   }, [data]);
+
+  const handleItemClick = (data: Item) => {
+    setSelectedData(data);
+  };
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -113,6 +119,7 @@ export default function SearchPage() {
                     <Link
                       to={`/detail/${item.contentId}`}
                       className={styles.customLink}
+                      onClick={() => handleItemClick(item)}
                     >
                       <div className={styles.imgWrapper}>
                         <img
@@ -126,6 +133,7 @@ export default function SearchPage() {
                       <Link
                         to={`/detail/${item.contentId}`}
                         className={styles.customLink}
+                        onClick={() => handleItemClick(item)}
                       >
                         <div
                           className={`${styles.campingTitle} fw-bold fs-3 mt-3`}
