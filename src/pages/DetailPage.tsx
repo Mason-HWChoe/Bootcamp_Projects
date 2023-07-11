@@ -4,7 +4,6 @@ import styles from './DetailPage.module.css';
 
 export default function DetailPage() {
   const { selectedData } = useSelectedDataContext();
-  console.log(selectedData);
 
   if (!selectedData) {
     return <div>캠핑장 정보가 없습니다.</div>;
@@ -27,9 +26,15 @@ export default function DetailPage() {
             <span className={`${styles.tag} rounded-pill`}>태그</span>
           )}
           {selectedData.themaEnvrnCl &&
-            selectedData.themaEnvrnCl.split(',').map((item: string) => {
-              return <span className={`${styles.tagName} ms-3`}>#{item}</span>;
-            })}
+            selectedData.themaEnvrnCl
+              .split(',')
+              .map((item: string, index: number) => {
+                return (
+                  <span className={`${styles.tagName} ms-3`} key={index}>
+                    #{item}
+                  </span>
+                );
+              })}
         </div>
       </div>
       <hr className={styles.grayBar} />

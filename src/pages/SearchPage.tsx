@@ -14,7 +14,9 @@ export default function SearchPage() {
   const [currentPage, setCurrentPage] = useState(initialPage); // 현재 페이지 번호
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=MJETrqk1X%2Fnh689Jug8ZnQO948tVbuhYyz5L5c8kkFgpsljkfLY2VaK5effABCJZyANcyFfLPfSBdA8hnia5Og%3D%3D&numOfRows=${itemsPerPage}&pageNo=${currentPage}&MobileOS=ETC&MobileApp=AppTest&_type=json`;
+  const CAMPING_API_KEY = process.env.REACT_APP_CAMPING_API_KEY;
+
+  const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${CAMPING_API_KEY}&numOfRows=${itemsPerPage}&pageNo=${currentPage}&MobileOS=ETC&MobileApp=AppTest&_type=json`;
 
   const { data, isLoading, totalCount } = useFetch(
     url,

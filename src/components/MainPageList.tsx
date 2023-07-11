@@ -3,8 +3,8 @@ import { useFetch } from '../hooks/useFetch';
 import styles from './MainPageList.module.css';
 
 export default function MainPageList() {
-  const url =
-    'https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=MJETrqk1X%2Fnh689Jug8ZnQO948tVbuhYyz5L5c8kkFgpsljkfLY2VaK5effABCJZyANcyFfLPfSBdA8hnia5Og%3D%3D&numOfRows=12&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json';
+  const CAMPING_API_KEY = process.env.REACT_APP_CAMPING_API_KEY;
+  const url = `https://apis.data.go.kr/B551011/GoCamping/basedList?serviceKey=${CAMPING_API_KEY}&numOfRows=12&pageNo=1&MobileOS=ETC&MobileApp=AppTest&_type=json`;
 
   const { data, isLoading } = useFetch(url);
 
