@@ -23,7 +23,7 @@ export default function SearchPage() {
   );
   const totalPages = Math.ceil(totalCount / itemsPerPage);
   const [datas, setDatas] = useState<Item[]>(data);
-  const { selectedData, setSelectedData } = useSelectedDataContext();
+  const { setSelectedData } = useSelectedDataContext();
 
   useEffect(() => {
     setDatas(data);
