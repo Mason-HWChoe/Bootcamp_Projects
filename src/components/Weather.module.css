@@ -1,0 +1,11 @@
+.weatherCard {
+  width: 12%;
+}
+
+.imgWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  overflow: auto;
+}

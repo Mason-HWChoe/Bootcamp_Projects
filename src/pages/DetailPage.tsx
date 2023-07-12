@@ -1,22 +1,10 @@
 import Footer from '../components/Footer';
-import { useWeatherAPI } from '../hooks/useWeather';
+import Weather from '../components/Weather';
 import { useSelectedDataContext } from '../store/SelectedItemsContext';
 import styles from './DetailPage.module.css';
 
 export default function DetailPage() {
   const { selectedData } = useSelectedDataContext();
-
-  const latitude = selectedData?.mapX;
-  const longitude = selectedData?.mapY;
-
-  console.log(latitude);
-  console.log(longitude);
-
-  const url = 'https://api.openweathermap.org/data/3.0/onecall?';
-
-  const { weatherData } = useWeatherAPI(url, latitude, longitude);
-
-  console.log(weatherData);
 
   if (!selectedData) {
     return <div>캠핑장 정보가 없습니다.</div>;
@@ -51,7 +39,9 @@ export default function DetailPage() {
         </div>
       </div>
       <hr className={styles.grayBar} />
-      <div className="container mt-4 mb-5 d-flex">
+
+      <Weather />
+      <div className="container mt-5 mb-5 d-flex">
         <div className={`${styles.imgContainer}`}>
           <img
             src={selectedData.firstImageUrl}
