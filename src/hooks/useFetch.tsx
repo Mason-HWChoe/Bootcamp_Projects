@@ -96,11 +96,11 @@ export interface ApiResponse {
   };
 }
 
-export const useFetch = (
+export function useFetch(
   url: string,
   currentPage?: number,
   itemsPerPage?: number,
-) => {
+) {
   const [data, setData] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -108,9 +108,9 @@ export const useFetch = (
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const updatedUrl = `${url}&numOfRows=${itemsPerPage}&pageNo=${currentPage}`;
+        const campingUrl = `${url}&numOfRows=${itemsPerPage}&pageNo=${currentPage}`;
         const response: AxiosResponse<ApiResponse> = await axios.get(
-          updatedUrl,
+          campingUrl,
         );
         const { totalCount, items } = response.data.response.body;
         setData(items.item);
@@ -126,4 +126,4 @@ export const useFetch = (
   }, [url, currentPage, itemsPerPage]);
 
   return { data, isLoading, totalCount };
-};
+}

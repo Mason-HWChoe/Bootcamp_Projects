@@ -1,9 +1,22 @@
 import Footer from '../components/Footer';
+import { useWeatherAPI } from '../hooks/useWeather';
 import { useSelectedDataContext } from '../store/SelectedItemsContext';
 import styles from './DetailPage.module.css';
 
 export default function DetailPage() {
   const { selectedData } = useSelectedDataContext();
+
+  const latitude = selectedData?.mapX;
+  const longitude = selectedData?.mapY;
+
+  console.log(latitude);
+  console.log(longitude);
+
+  const url = 'https://api.openweathermap.org/data/3.0/onecall?';
+
+  const { weatherData } = useWeatherAPI(url, latitude, longitude);
+
+  console.log(weatherData);
 
   if (!selectedData) {
     return <div>캠핑장 정보가 없습니다.</div>;
