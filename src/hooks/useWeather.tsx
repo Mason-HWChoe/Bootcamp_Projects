@@ -1,7 +1,48 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-export interface weatherDataType {
+interface dailyWeatherDataType {
+  clouds: number;
+  dew_point: number;
+  dt: number;
+  feels_like: {
+    day: number;
+    night: number;
+    eve: number;
+    morn: number;
+  };
+  humidity: number;
+  moon_phase: number;
+  moonrise: number;
+  moonset: number;
+  pop: number;
+  pressure: number;
+  rain: number;
+  summary: string;
+  sunrise: number;
+  sunset: number;
+  temp: {
+    day: number;
+    eve: number;
+    max: number;
+    min: number;
+    morn: number;
+    night: number;
+  };
+  uvi: number;
+  weather: [
+    {
+      id: number;
+      main: string;
+      description: string;
+      icon: string;
+    },
+  ];
+  wind_deg: number;
+  wind_gust: number;
+  wind_speed: number;
+}
+interface weatherDataType {
   current: {
     clouds: number;
     dew_point: number;
@@ -26,336 +67,7 @@ export interface weatherDataType {
     wind_gust: number;
     wind_speed: number;
   };
-  daily: [
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-    {
-      clouds: number;
-      dew_point: number;
-      dt: number;
-      feels_like: {
-        day: number;
-        night: number;
-        eve: number;
-        morn: number;
-      };
-      humidity: number;
-      moon_phase: number;
-      moonrise: number;
-      moonset: number;
-      pop: number;
-      pressure: number;
-      rain: number;
-      summary: string;
-      sunrise: number;
-      sunset: number;
-      temp: {
-        day: number;
-        eve: number;
-        max: number;
-        min: number;
-        morn: number;
-        night: number;
-      };
-      uvi: number;
-      weather: [
-        {
-          id: number;
-          main: string;
-          description: string;
-          icon: string;
-        },
-      ];
-      wind_deg: number;
-      wind_gust: number;
-      wind_speed: number;
-    },
-  ];
+  daily: dailyWeatherDataType[];
   hourly: [];
   lat: number;
   lon: number;

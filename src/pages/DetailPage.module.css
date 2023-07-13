@@ -74,3 +74,27 @@
 .homepageLink:hover {
   text-decoration: underline;
 }
+
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.infoListItem {
+  margin-right: 1px;
+  width: 30%;
+  height: 3em;
+  line-height: 3em;
+  border: 1px solid #626262;
+  color: #fff;
+  background-color: #626262;
+  cursor: pointer;
+}
+
+.infoListItem.active {
+  border: 1px solid #626262;
+  border-bottom: none;
+  color: #000;
+  background-color: #edfaef;
+}

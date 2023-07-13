@@ -1,14 +1,23 @@
+import { useState } from 'react';
 import Footer from '../components/Footer';
 import Weather from '../components/Weather';
 import { useSelectedDataContext } from '../store/SelectedItemsContext';
+import CampIntroPage from './CampIntroPage';
+import CampingReviewPage from './CampingReviewPage';
 import styles from './DetailPage.module.css';
+import LocationMapPage from './LocationMapPage';
 
 export default function DetailPage() {
+  const [currentPage, setCurrentPage] = useState('캠핑장소개');
   const { selectedData } = useSelectedDataContext();
 
   if (!selectedData) {
     return <div>캠핑장 정보가 없습니다.</div>;
   }
+
+  const handleItemClick = (page: string) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -113,6 +122,38 @@ export default function DetailPage() {
             예약하러 가기
           </a>
         </div>
+      </div>
+
+      <div className="container">
+        <ul className={`${styles.infoList} d-flex justify-content-center`}>
+          <li
+            className={`${styles.infoListItem} ${
+              currentPage === '캠핑장소개' ? styles.active : ''
+            }  text-center fs-5 fw-semibold`}
+            onClick={() => handleItemClick('캠핑장소개')}
+          >
+            캠핑장소개
+          </li>
+          <li
+            className={`${styles.infoListItem} ${
+              currentPage === '위치/지도' ? styles.active : ''
+            }  text-center fs-5 fw-semibold`}
+            onClick={() => handleItemClick('위치/지도')}
+          >
+            위치/지도
+          </li>
+          <li
+            className={`${styles.infoListItem} ${
+              currentPage === '캠핑&여행후기' ? styles.active : ''
+            }  text-center fs-5 fw-semibold`}
+            onClick={() => handleItemClick('캠핑&여행후기')}
+          >
+            캠핑&여행후기
+          </li>
+        </ul>
+        {currentPage === '캠핑장소개' && <CampIntroPage />}
+        {currentPage === '위치/지도' && <LocationMapPage />}
+        {currentPage === '캠핑&여행후기' && <CampingReviewPage />}
       </div>
 
       <Footer />
