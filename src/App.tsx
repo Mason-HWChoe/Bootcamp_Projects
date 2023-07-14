@@ -9,20 +9,23 @@ import MainPage from './pages/MainPage';
 import SearchPage from './pages/SearchPage';
 import SignUpPage from './pages/SignUpPage';
 import SelectedDataStore from './store/SelectedItemsContext';
+import { UserProviderStore } from './store/UserContext';
 
 function App() {
   return (
     <BrowserRouter>
-      <Nav />
-      <SelectedDataStore>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="signUp" element={<SignUpPage />} />
-          <Route path="search" element={<SearchPage />} />
-          <Route path="detail/:contentId" element={<DetailPage />} />
-        </Routes>
-      </SelectedDataStore>
+      <UserProviderStore>
+        <Nav />
+        <SelectedDataStore>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="login" element={<LoginPage />} />
+            <Route path="signUp" element={<SignUpPage />} />
+            <Route path="search" element={<SearchPage />} />
+            <Route path="detail/:contentId" element={<DetailPage />} />
+          </Routes>
+        </SelectedDataStore>
+      </UserProviderStore>
     </BrowserRouter>
   );
 }

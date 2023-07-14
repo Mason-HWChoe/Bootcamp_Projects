@@ -4,7 +4,8 @@ interface FormFieldType {
   placeholder: string;
   label: string;
   margin: number;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  invalid?: boolean;
 }
 
 function FormField({
@@ -14,6 +15,7 @@ function FormField({
   label,
   margin,
   onChange,
+  invalid,
 }: FormFieldType): JSX.Element {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -24,7 +26,7 @@ function FormField({
     <div className={`form-floating mt-${margin}`}>
       <input
         type={type}
-        className="form-control"
+        className={`form-control ${invalid ? 'is-invalid' : ''}`}
         id={id}
         placeholder={placeholder}
         required

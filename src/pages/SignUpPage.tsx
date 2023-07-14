@@ -99,15 +99,11 @@ export default function SignUpPage() {
       .then((userCredential) => {
         const user = userCredential.user;
 
+        // Firebase에서 사용자 정보 업데이트
         updateProfile(user, { displayName: signUpNickname })
           .then(() => {
-            console.log(
-              '사용자가 닉네임과 함께 등록되었습니다:',
-              signUpNickname,
-            );
-
             alert(
-              '축하합니다! 회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.',
+              '축하합니다! 회원가입이 완료되었습니다! 로그인페이지로 이동합니다.',
             );
             navigate('/login');
           })

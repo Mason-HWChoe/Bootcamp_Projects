@@ -15,7 +15,6 @@ export default function CampIntroPage() {
   const url = `https://apis.data.go.kr/B551011/GoCamping/`;
 
   const { images } = useCampImage(url, selectedData.contentId);
-  console.log(images);
 
   const openModal = (image: string) => {
     setSelectedImage(image);

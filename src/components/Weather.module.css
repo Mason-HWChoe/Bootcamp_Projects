@@ -2,6 +2,12 @@
   background-color: #edfaef;
 }
 
+.weatherTitle {
+  display: inline-block;
+  width: 50%;
+  background-color: #edfaef;
+}
+
 .weatherCard {
   width: 12%;
 }

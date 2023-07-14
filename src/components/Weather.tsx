@@ -33,77 +33,85 @@ export default function Weather() {
   }
 
   return (
-    <div className={`${styles.weatherContainer} container rounded-pill`}>
-      <div className="container d-flex justify-content-center mt-4 w-75">
-        <div className={`${styles.weatherCard} card me-4 bg-warning`}>
-          <h5 className="card-title text-center fw-bold mt-4">
-            {convertTimestampToDayAndMonth(currentUnixTimestamp).month}월{' '}
-            {convertTimestampToDayAndMonth(currentUnixTimestamp).day}일
-          </h5>
-          <div className={styles.imgWrapper}>
-            <img
-              src={`https://openweathermap.org/img/wn/${currentWeatherImg}@2x.png`}
-              className="card-img-top"
-              alt={currentWeatherDescription}
-            />
-          </div>
-          <div className="card-body">
-            <div className="card-title text-center fw-bold fs-5">
-              현재기온
-              <div className="fs-5 text-danger">{currentTemperature} °C</div>
-            </div>
-            <hr />
-            <p className="card-title text-center fw-bold fs-6 mt-3">
-              현재 날씨
-            </p>
-            <p className="card-text text-center fw-bold text-primary">
-              {currentWeather}
-            </p>
-          </div>
-        </div>
-        {weatherSevenDays.map((_, index) => {
-          if (index === 0) {
-            return null;
-          }
-          const weatherImg = weatherData.daily[index].weather[0].icon;
-          const nextDaystUnixTimestamp = weatherData.daily[index].dt * 1000;
-          const nextDaysTemperature =
-            weatherData.daily[index].temp.day.toFixed(1);
-          const nextDaysWeather =
-            weatherData.daily[index].weather[0].description;
-
-          return (
-            <div className={`${styles.weatherCard} card`} key={index}>
-              <h5 className="card-title text-center fw-bold mt-4">
-                {convertTimestampToDayAndMonth(nextDaystUnixTimestamp).month}월{' '}
-                {convertTimestampToDayAndMonth(nextDaystUnixTimestamp).day}일
-              </h5>
-              <div className={styles.imgWrapper}>
-                <img
-                  src={`https://openweathermap.org/img/wn/${weatherImg}@2x.png`}
-                  className="card-img-top"
-                  alt="..."
-                />
-              </div>
-              <div className="card-body">
-                <div className="card-title text-center fw-bold fs-5">
-                  예상기온
-                  <div className="fs-5 text-danger">
-                    {nextDaysTemperature} °C
-                  </div>
-                </div>
-                <hr />
-                <p className="card-title text-center fw-bold fs-6 mt-3">
-                  예상 날씨
-                </p>
-                <p className="card-text text-center fw-bold text-primary">
-                  {nextDaysWeather}
-                </p>
-              </div>
-            </div>
-          );
-        })}
+    <>
+      <div className="fs-3 fw-bold mt-3 mb-3 text-center">
+        <span className={`${styles.weatherTitle} rounded-pill`}>
+          {selectedData?.doNm} {selectedData?.sigunguNm} 기상 예보
+        </span>
       </div>
-    </div>
+      <div className={`${styles.weatherContainer} container rounded-pill`}>
+        <div className="container d-flex justify-content-center mt-4 w-75">
+          <div className={`${styles.weatherCard} card me-4 bg-warning`}>
+            <h5 className="card-title text-center fw-bold mt-4">
+              {convertTimestampToDayAndMonth(currentUnixTimestamp).month}월{' '}
+              {convertTimestampToDayAndMonth(currentUnixTimestamp).day}일
+            </h5>
+            <div className={styles.imgWrapper}>
+              <img
+                src={`https://openweathermap.org/img/wn/${currentWeatherImg}@2x.png`}
+                className="card-img-top"
+                alt={currentWeatherDescription}
+              />
+            </div>
+            <div className="card-body">
+              <div className="card-title text-center fw-bold fs-5">
+                현재기온
+                <div className="fs-5 text-danger">{currentTemperature} °C</div>
+              </div>
+              <hr />
+              <p className="card-title text-center fw-bold fs-6 mt-3">
+                현재 날씨
+              </p>
+              <p className="card-text text-center fw-bold text-primary">
+                {currentWeather}
+              </p>
+            </div>
+          </div>
+          {weatherSevenDays.map((_, index) => {
+            if (index === 0) {
+              return null;
+            }
+            const weatherImg = weatherData.daily[index].weather[0].icon;
+            const nextDaystUnixTimestamp = weatherData.daily[index].dt * 1000;
+            const nextDaysTemperature =
+              weatherData.daily[index].temp.day.toFixed(1);
+            const nextDaysWeather =
+              weatherData.daily[index].weather[0].description;
+
+            return (
+              <div className={`${styles.weatherCard} card`} key={index}>
+                <h5 className="card-title text-center fw-bold mt-4">
+                  {convertTimestampToDayAndMonth(nextDaystUnixTimestamp).month}
+                  월 {convertTimestampToDayAndMonth(nextDaystUnixTimestamp).day}
+                  일
+                </h5>
+                <div className={styles.imgWrapper}>
+                  <img
+                    src={`https://openweathermap.org/img/wn/${weatherImg}@2x.png`}
+                    className="card-img-top"
+                    alt="..."
+                  />
+                </div>
+                <div className="card-body">
+                  <div className="card-title text-center fw-bold fs-5">
+                    예상기온
+                    <div className="fs-5 text-danger">
+                      {nextDaysTemperature} °C
+                    </div>
+                  </div>
+                  <hr />
+                  <p className="card-title text-center fw-bold fs-6 mt-3">
+                    예상 날씨
+                  </p>
+                  <p className="card-text text-center fw-bold text-primary">
+                    {nextDaysWeather}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 }
