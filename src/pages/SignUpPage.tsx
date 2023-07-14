@@ -1,53 +1,136 @@
-import { initializeApp } from 'firebase/app';
-import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  getAuth,
+  updateProfile,
+} from 'firebase/auth';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
 import styles from './SignUpPage.module.css';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyBvU-e3rhwXEJcsUNoQ9y7lzHpwdlLhWPQ',
-  authDomain: 'campingjua.firebaseapp.com',
-  projectId: 'campingjua',
-  storageBucket: 'campingjua.appspot.com',
-  messagingSenderId: '839773153093',
-  appId: '1:839773153093:web:757cc783d3b9fbf313402c',
-  measurementId: 'G-BTSZFPYF25',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
 
 export default function SignUpPage() {
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [signUpNickname, setSignUpNickname] = useState('');
+  const [passwordMismatch, setPasswordMismatch] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [emailChecked, setEmailChecked] = useState(false);
+  const navigate = useNavigate();
 
   const auth = getAuth();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpEmail(e.target.value);
+    setEmailChecked(false);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpPassword(e.target.value);
+    setPasswordMismatch(e.target.value !== confirmPassword);
   };
 
-  const handleSignUp = (e: { preventDefault: () => void }) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setConfirmPassword(e.target.value);
+    setPasswordMismatch(e.target.value !== signUpPassword);
+  };
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSignUpNickname(e.target.value);
+  };
+
+  const handleEmailDuplicateCheck = async () => {
+    const emailValid = validateEmail(signUpEmail);
+
+    if (!emailValid) {
+      alert('올바른 이메일 형식을 입력해주세요.');
+      return;
+    }
+
+    try {
+      const methods = await fetchSignInMethodsForEmail(auth, signUpEmail);
+
+      if (methods && methods.length > 0) {
+        alert('이미 가입된 이메일 주소입니다. 다시 한 번 확인해주세요.');
+      } else {
+        alert('사용 가능한 이메일 주소입니다.');
+        setEmailChecked(true);
+      }
+    } catch (error) {
+      console.log('이메일 가용성 확인 중 오류 발생:', error);
+    }
+  };
+
+  const handleSignUp = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    setFormSubmitted(true);
+
+    if (!validateRequiredFields()) {
+      alert('입력 사항을 모두 입력해주세요.');
+      return;
+    }
+
+    if (!emailChecked) {
+      alert('이메일 중복체크를 완료해주세요.');
+      return;
+    }
+
+    if (signUpPassword.length < 6) {
+      alert('비밀번호는 최소 6자리 이상이어야 합니다.');
+      return;
+    }
+
+    if (signUpPassword !== confirmPassword) {
+      setPasswordMismatch(true);
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    if (!validateEmail(signUpEmail)) {
+      alert('올바른 이메일 형식을 입력해주세요.');
+      return;
+    }
 
     createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
       .then((userCredential) => {
-        // Signed in
-        console.log(userCredential);
-        // const user = userCredential.user;
-        // ...
+        const user = userCredential.user;
+
+        updateProfile(user, { displayName: signUpNickname })
+          .then(() => {
+            console.log(
+              '사용자가 닉네임과 함께 등록되었습니다:',
+              signUpNickname,
+            );
+
+            alert(
+              '축하합니다! 회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.',
+            );
+            navigate('/login');
+          })
+          .catch((error) => {
+            console.log('프로필 업데이트 중 오류 발생:', error);
+          });
       })
       .catch((error) => {
-        console.log(error.code);
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        // ..
+        console.log('사용자 생성 중 오류 발생:', error);
       });
+  };
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validateRequiredFields = () => {
+    return (
+      signUpEmail.trim() !== '' &&
+      signUpPassword.trim() !== '' &&
+      confirmPassword.trim() !== '' &&
+      signUpNickname.trim() !== ''
+    );
   };
 
   return (
@@ -60,9 +143,14 @@ export default function SignUpPage() {
         label="Email"
         margin={4}
         onChange={handleEmailChange}
+        invalid={formSubmitted && signUpEmail.trim() === ''}
       />
-      <div className={styles.idCheck}>
-        <button type="button" className="btn btn-secondary btn-sm">
+      <div className={styles.emailCheck}>
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          onClick={handleEmailDuplicateCheck}
+        >
           Email 중복체크
         </button>
       </div>
@@ -74,24 +162,45 @@ export default function SignUpPage() {
         label="Password"
         margin={2}
         onChange={handlePasswordChange}
+        invalid={formSubmitted && signUpPassword.trim() === ''}
       />
+      <div className={styles.passwordMessage}>
+        최소 6자리 이상의 대소문자, 숫자, 특수문자로 구성해주세요
+      </div>
       <FormField
         type="password"
         id="floatingConfirmPassword"
         placeholder="ConfirmPassword"
         label="ConfirmPassword"
         margin={4}
+        onChange={handleConfirmPasswordChange}
+        invalid={formSubmitted && confirmPassword.trim() === ''}
       />
-      <div className={styles.passwordMessage}>
-        비밀번호가 일치하지 않습니다.
+      <div>
+        {(formSubmitted || (confirmPassword && signUpPassword)) &&
+          !passwordMismatch && (
+            <div className={`${styles.passwordSuccess} text-success`}>
+              {signUpPassword !== '' && '비밀번호가 일치합니다.'}
+            </div>
+          )}
+        {formSubmitted ||
+          (passwordMismatch && (
+            <div className={`${styles.passwordError} text-danger`}>
+              비밀번호가 일치하지 않습니다.
+            </div>
+          ))}
       </div>
+
       <FormField
         type="text"
         id="floatingNickname"
         placeholder="Nickname"
         label="Nickname"
         margin={4}
+        onChange={handleNicknameChange}
+        invalid={formSubmitted && signUpNickname.trim() === ''}
       />
+
       <button
         type="submit"
         className="btn btn-primary container mt-4 mb-2"

@@ -7,14 +7,20 @@
   height: 60%;
 }
 
-.idCheck {
+.emailCheck {
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
 }
 
-.passwordMessage {
+.passwordMessage,
+.passwordError,
+.passwordSuccess {
   font-size: 12px;
-  color: red;
+  margin-top: 3px;
   padding-left: 10px;
+}
+
+.passwordMessage {
+  color: #5b5e5b;
 }
