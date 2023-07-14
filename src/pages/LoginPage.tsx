@@ -1,30 +1,46 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from 'firebase/auth';
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import UserContext from '../store/UserContext';
 import styles from './LoginPage.module.css';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBvU-e3rhwXEJcsUNoQ9y7lzHpwdlLhWPQ',
-  authDomain: 'campingjua.firebaseapp.com',
-  projectId: 'campingjua',
-  storageBucket: 'campingjua.appspot.com',
-  messagingSenderId: '839773153093',
-  appId: '1:839773153093:web:757cc783d3b9fbf313402c',
-  measurementId: 'G-BTSZFPYF25',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(app);
+const provider = new GoogleAuthProvider();
 
 export default function LoginPage() {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const navigate = useNavigate();
+  const { updateUser } = useContext(UserContext);
 
   const auth = getAuth();
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      updateUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginEmail(e.target.value);
@@ -34,20 +50,56 @@ export default function LoginPage() {
     setLoginPassword(e.target.value);
   };
 
-  const handleLogin = (e: { preventDefault: () => void }) => {
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     signInWithEmailAndPassword(auth, loginEmail, loginPassword)
       .then((userCredential) => {
-        // Signed in
-        console.log(userCredential);
-        // const user = userCredential.user;
-        // ...
+        console.log('로그인 성공');
+        const user = userCredential.user;
+
+        updateProfile(user, {
+          displayName: user.displayName,
+        })
+          .then(() => {
+            updateUser({
+              displayName: user.displayName ? user.displayName : '',
+            });
+            localStorage.setItem('user', JSON.stringify(user));
+            navigate('/');
+          })
+          .catch((error) => {
+            console.log('사용자 정보 업데이트 실패:', error);
+          });
       })
       .catch((error) => {
-        console.log(error.code);
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
+        console.log(error);
+        if (error) {
+          setLoginError('이메일 또는 비밀번호가 잘못되었습니다.');
+        }
+      });
+  };
+
+  const handleGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        updateProfile(user, {
+          displayName: user.displayName,
+        })
+          .then(() => {
+            updateUser({
+              displayName: user.displayName ? user.displayName : '',
+            });
+            localStorage.setItem('user', JSON.stringify(user));
+            navigate('/');
+          })
+          .catch((error) => {
+            console.log('사용자 정보 업데이트 실패:', error);
+          });
+      })
+      .catch((error) => {
+        console.log('구글 로그인 실패:', error);
       });
   };
 
@@ -55,29 +107,28 @@ export default function LoginPage() {
     <>
       <div className={styles.loginContainer}>
         <h4 className="display-6 text-muted mb-3 fw-bold">로그인</h4>
-        <FormField
-          type="email"
-          id="floatingEmail"
-          placeholder="email"
-          label="Email"
-          margin={4}
-          onChange={handleEmailChange}
-        />
-        <FormField
-          type="password"
-          id="floatingPassword"
-          placeholder="Password"
-          label="Password"
-          margin={4}
-          onChange={handlePasswordChange}
-        />
-        <button
-          type="submit"
-          className="btn btn-primary container mt-4 mb-2"
-          onClick={handleLogin}
-        >
-          <span className="fs-4 fw-semibold">로그인</span>
-        </button>
+        <form onSubmit={handleLogin}>
+          <FormField
+            type="email"
+            id="floatingEmail"
+            placeholder="email"
+            label="Email"
+            margin={4}
+            onChange={handleEmailChange}
+          />
+          <FormField
+            type="password"
+            id="floatingPassword"
+            placeholder="Password"
+            label="Password"
+            margin={4}
+            onChange={handlePasswordChange}
+          />
+          {loginError && <div className="text-danger">{loginError}</div>}
+          <button type="submit" className="btn btn-primary container mt-4 mb-2">
+            <span className="fs-4 fw-semibold">로그인</span>
+          </button>
+        </form>
         <div className="text-end pe-2 text-decoration-underline">
           <Link to="/signup" className={styles.customLink}>
             회원가입
@@ -86,7 +137,11 @@ export default function LoginPage() {
 
         <p className="text-center mt-4 text-black-50">OR</p>
 
-        <button type="submit" className="btn btn-secondary container">
+        <button
+          type="submit"
+          className="btn btn-secondary container"
+          onClick={handleGoogleLogin}
+        >
           <span className="fs-5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
