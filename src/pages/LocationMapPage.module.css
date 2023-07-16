@@ -1,0 +1,22 @@
+.locationMapContainer {
+  padding: 1em;
+  background-color: #edfaef;
+}
+
+.mapContainer {
+  padding: 2rem;
+  padding-top: 1rem;
+  width: 100%;
+  height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mapArea {
+  width: 100%;
+  height: 100%;
+}
+
+.popupContainer {
+  z-index: 9999;
+}
