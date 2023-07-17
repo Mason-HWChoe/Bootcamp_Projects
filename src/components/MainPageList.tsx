@@ -49,7 +49,7 @@ export default function MainPageList() {
                   </p>
                   <a
                     href={item.homepage}
-                    className="btn btn-primary"
+                    className="btn btn-primary d-block"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

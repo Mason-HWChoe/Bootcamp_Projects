@@ -41,7 +41,7 @@ export default function Nav() {
             </button>
 
             <button type="button" className="btn btn-outline-secondary me-4">
-              <Link to="/signup" className={styles.customLink}>
+              <Link to="/signUp" className={styles.customLink}>
                 회원가입
               </Link>
             </button>
@@ -71,7 +71,7 @@ export default function Nav() {
               로그아웃
             </button>
             <button type="button" className="btn btn-outline-secondary me-4">
-              <Link to="/signup" className={styles.customLink}>
+              <Link to="/signUp" className={styles.customLink}>
                 회원가입
               </Link>
             </button>

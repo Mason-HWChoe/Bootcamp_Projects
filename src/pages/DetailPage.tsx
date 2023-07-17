@@ -132,7 +132,7 @@ export default function DetailPage() {
             }  text-center fs-5 fw-semibold`}
             onClick={() => handleItemClick('캠핑장소개')}
           >
-            캠핑장소개
+            캠핑장 소개
           </li>
           <li
             className={`${styles.infoListItem} ${
@@ -144,16 +144,16 @@ export default function DetailPage() {
           </li>
           <li
             className={`${styles.infoListItem} ${
-              currentPage === '캠핑&여행후기' ? styles.active : ''
+              currentPage === '캠핑장후기' ? styles.active : ''
             }  text-center fs-5 fw-semibold`}
-            onClick={() => handleItemClick('캠핑&여행후기')}
+            onClick={() => handleItemClick('캠핑장후기')}
           >
-            캠핑&여행후기
+            캠핑장 후기
           </li>
         </ul>
         {currentPage === '캠핑장소개' && <CampIntroPage />}
         {currentPage === '위치/지도' && <LocationMapPage />}
-        {currentPage === '캠핑&여행후기' && <CampingReviewPage />}
+        {currentPage === '캠핑장후기' && <CampingReviewPage />}
       </div>
 
       <Footer />

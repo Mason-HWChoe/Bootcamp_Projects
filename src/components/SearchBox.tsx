@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import data from '../../public/DataForSearch.json';
+import data from '../Data/DataForSearch.json';
 import styles from './SearchBox.module.css';
 
 interface Region {

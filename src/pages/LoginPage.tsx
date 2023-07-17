@@ -21,6 +21,7 @@ const firebaseConfig = {
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  databaseUrl: process.env.REACT_APP_DATABASE_URL,
 };
 
 const app = initializeApp(firebaseConfig);
@@ -130,7 +131,7 @@ export default function LoginPage() {
           </button>
         </form>
         <div className="text-end pe-2 text-decoration-underline">
-          <Link to="/signup" className={styles.customLink}>
+          <Link to="/signUp" className={styles.customLink}>
             회원가입
           </Link>
         </div>
