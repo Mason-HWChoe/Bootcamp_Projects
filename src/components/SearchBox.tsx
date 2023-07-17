@@ -1,10 +1,33 @@
+import { useState } from 'react';
+import data from '../../public/DataForSearch.json';
 import styles from './SearchBox.module.css';
+
+interface Region {
+  province: string;
+  cities: string[];
+}
+
+interface Data {
+  regions: Region[];
+  theme: string[];
+}
 
 export default function SearchBox({
   position,
 }: {
   position: 'absolute' | 'relative';
 }) {
+  const [selectedProvinceIndex, setSelectedProvinceIndex] = useState<
+    number | null
+  >(null);
+
+  const provinces = data.regions.map((region) => region.province);
+
+  const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const index = +e.target.value;
+    setSelectedProvinceIndex(index);
+  };
+
   return (
     <div
       className={`${
@@ -36,13 +59,18 @@ export default function SearchBox({
             className={`${styles.selectProvince} form-select`}
             aria-label="select-box"
             defaultValue="default"
+            onChange={handleProvinceChange}
           >
             <option disabled value="default">
               전체/도
             </option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            {provinces.map((province, index) => {
+              return (
+                <option value={index} key={index}>
+                  {province}
+                </option>
+              );
+            })}
           </select>
         </div>
 
@@ -55,9 +83,14 @@ export default function SearchBox({
             <option disabled value="default">
               전체/시/군
             </option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            {selectedProvinceIndex !== null &&
+              data.regions[selectedProvinceIndex].cities.map((city, index) => {
+                return (
+                  <option value={index} key={index}>
+                    {city}
+                  </option>
+                );
+              })}
           </select>
         </div>
       </div>
@@ -79,9 +112,13 @@ export default function SearchBox({
             <option disabled value="default">
               전체테마
             </option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            {data.themes.map((theme, index) => {
+              return (
+                <option value={index} key={index}>
+                  {theme}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div className="ms-3">
