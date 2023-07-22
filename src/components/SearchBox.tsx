@@ -1,31 +1,47 @@
 import { useState } from 'react';
-import data from '../Data/DataForSearch.json';
+import DataForSearch from '../Data/DataForSearch.json';
 import styles from './SearchBox.module.css';
 
-interface Region {
-  province: string;
-  cities: string[];
-}
-
-interface Data {
-  regions: Region[];
-  theme: string[];
-}
-
-export default function SearchBox({
-  position,
-}: {
+interface SearchBoxProps {
   position: 'absolute' | 'relative';
-}) {
-  const [selectedProvinceIndex, setSelectedProvinceIndex] = useState<
-    number | null
-  >(null);
+  onSearch: (
+    selectedProvince: string,
+    selectedCity: string,
+    selectedTheme: string,
+    keyword: string,
+  ) => void;
+}
 
-  const provinces = data.regions.map((region) => region.province);
+export default function SearchBox({ position, onSearch }: SearchBoxProps) {
+  const [keyword, setKeyword] = useState<string>('');
+  const [selectedProvince, setSelectedProvince] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
+  const [selectedTheme, setSelectedTheme] = useState<string>('');
+
+  const provinces = DataForSearch.regions.map((region) => region.province);
 
   const handleProvinceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const index = +e.target.value;
-    setSelectedProvinceIndex(index);
+    const province = e.target.value;
+    setSelectedProvince(province);
+    setSelectedCity('');
+  };
+
+  const handleKeywordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
+
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const city = e.target.value;
+    setSelectedCity(city);
+  };
+
+  const handleThemeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const themeValue = e.target.value;
+    setSelectedTheme(themeValue);
+  };
+
+  const handleSearch = () => {
+    onSearch(selectedProvince, selectedCity, selectedTheme, keyword);
   };
 
   return (
@@ -47,6 +63,7 @@ export default function SearchBox({
           placeholder="검색어를 입력해주세요"
           aria-label="search"
           aria-describedby="basic-addon1"
+          onChange={handleKeywordChange}
         />
       </div>
       <div className="input-group">
@@ -61,12 +78,10 @@ export default function SearchBox({
             defaultValue="default"
             onChange={handleProvinceChange}
           >
-            <option disabled value="default">
-              전체/도
-            </option>
+            <option value="default">전체/도</option>
             {provinces.map((province, index) => {
               return (
-                <option value={index} key={index}>
+                <option value={province} key={index}>
                   {province}
                 </option>
               );
@@ -79,18 +94,20 @@ export default function SearchBox({
             className={`${styles.selectCity} form-select`}
             aria-label="select-box"
             defaultValue="default"
+            onChange={handleCityChange}
           >
-            <option disabled value="default">
-              전체/시/군
-            </option>
-            {selectedProvinceIndex !== null &&
-              data.regions[selectedProvinceIndex].cities.map((city, index) => {
-                return (
-                  <option value={index} key={index}>
-                    {city}
-                  </option>
-                );
-              })}
+            <option value="default">전체/시/군</option>
+            {selectedProvince !== '' &&
+              DataForSearch.regions
+                .filter((region) => region.province === selectedProvince)
+                .flatMap((region) => region.cities)
+                .map((city, index) => {
+                  return (
+                    <option value={city} key={index}>
+                      {city}
+                    </option>
+                  );
+                })}
           </select>
         </div>
       </div>
@@ -107,14 +124,12 @@ export default function SearchBox({
           <select
             className={`${styles.selectTheme} form-select`}
             aria-label="select-box"
-            defaultValue="default"
+            onChange={handleThemeChange}
           >
-            <option disabled value="default">
-              전체테마
-            </option>
-            {data.themes.map((theme, index) => {
+            <option>전체테마</option>
+            {DataForSearch.themes.map((theme, index) => {
               return (
-                <option value={index} key={index}>
+                <option value={theme} key={index}>
                   {theme}
                 </option>
               );
@@ -125,6 +140,7 @@ export default function SearchBox({
           <button
             type="button"
             className={`${styles.searchBtn} btn btn-primary`}
+            onClick={handleSearch}
           >
             검색
           </button>

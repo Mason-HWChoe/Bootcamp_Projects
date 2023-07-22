@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import SearchBox from './SearchBox';
 
 export default function Carousel() {
   const carouselRef = useRef(null);
@@ -88,7 +87,6 @@ export default function Carousel() {
             <p>캠핑을 통해 잠시나마 일상을 벗어나 낭만을 즐겨보세요</p>
           </div>
         </div>
-        <SearchBox position="absolute" />
       </div>
       <button
         className="carousel-control-prev"
