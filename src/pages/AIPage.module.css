@@ -1,0 +1,8 @@
+.AIPageContainer {
+  background-color: #f8fcfe;
+}
+
+.chatContainer {
+  height: 70vh;
+  overflow: scroll;
+}

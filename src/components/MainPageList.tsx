@@ -28,6 +28,14 @@ export default function MainPageList() {
             전체 캠핑장 보러가기
           </Link>
         </button>
+        <button
+          type="button"
+          className="btn btn-lg btn-outline-danger fw-bold ms-4"
+        >
+          <Link to="/ai" className={styles.customLink}>
+            AI에게 물어보러가기
+          </Link>
+        </button>
       </div>
 
       <div className="container mt-5">

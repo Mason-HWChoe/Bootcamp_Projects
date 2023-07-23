@@ -3,6 +3,7 @@ import './App.css';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Nav from './components/Nav';
+import AIPage from './pages/AIPage';
 import DetailPage from './pages/DetailPage';
 import LoginPage from './pages/LoginPage';
 import MainPage from './pages/MainPage';
@@ -22,6 +23,7 @@ function App() {
             <Route path="login" element={<LoginPage />} />
             <Route path="signUp" element={<SignUpPage />} />
             <Route path="search" element={<SearchPage />} />
+            <Route path="ai" element={<AIPage />} />
             <Route path="detail/:contentId" element={<DetailPage />} />
           </Routes>
         </SelectedDataStore>
