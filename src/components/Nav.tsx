@@ -27,7 +27,7 @@ export default function Nav() {
         <Link to="/" className={styles.customLink}>
           <img className={styles.logo} src="/campingLogo.png" alt="캠핑가자1" />
         </Link>
-        <Link to="/" className={styles.customLink}>
+        <Link to="/" className={styles.navTitle}>
           <h1 className="ms-4 mt-2">캠핑쥬아</h1>
         </Link>
       </div>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Single+Day&display=swap');
+
 .navContainer {
   width: 100%;
   height: 80px;
@@ -15,11 +17,17 @@
   height: 80px;
 }
 
-.customLink {
+.customLink,
+.navTitle {
   text-decoration: none;
   color: inherit;
 }
 
-.customLink:hover {
+.navTitle {
+  font-family: 'Single Day', cursive;
+}
+
+.customLink:hover,
+.navTitle:hover {
   color: inherit;
 }
