@@ -23,7 +23,9 @@ export default function SearchPage() {
     currentPage,
     itemsPerPage,
   );
-  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const [totalPages, setTotalPages] = useState(
+    Math.ceil(totalCount / itemsPerPage),
+  );
   const [datas, setDatas] = useState<Item[]>(data);
   const [filteredData, setFilteredData] = useState<Item[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -123,6 +125,8 @@ export default function SearchPage() {
             );
           });
 
+          const newTotalPages = Math.ceil(filteredData.length / itemsPerPage);
+          setTotalPages(newTotalPages);
           setIsSearching(true);
           setCurrentPage(1);
           setFilteredData(filteredData);
@@ -138,6 +142,8 @@ export default function SearchPage() {
   const handleViewAllCampingSites = () => {
     setFilteredData([]);
     setIsSearching(false);
+    setDatas(data);
+    setTotalPages(Math.ceil(totalCount / itemsPerPage));
   };
 
   return (
