@@ -7,6 +7,7 @@ import {
   ref,
   set,
 } from 'firebase/database';
+import { throttle } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
 import UserContext from '../store/UserContext';
 import styles from './CampingReviewPage.module.css';
@@ -60,13 +61,13 @@ const getComments = async (
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
-  // startIndex와 commentsPerPage를 사용하여 보여줄 댓글을 slice합니다.
+  // startIndex와 commentsPerPage를 사용하여 보여줄 댓글을 slice
   const visibleCommentsSlice = comments.slice(
     startIndex,
     startIndex + commentsPerPage,
   );
 
-  // 가져온 댓글을 visibleComments 상태에 업데이트합니다.
+  // 가져온 댓글을 visibleComments 상태에 업데이트
   setVisibleComments((prevComments) => {
     const existingComments = prevComments.filter(
       (comment) => !visibleCommentsSlice.find((c) => c.date === comment.date),
@@ -101,15 +102,6 @@ export default function CampingReviewPage() {
     // 페이지 로드 시 댓글 데이터를 가져와서 설정
     getComments(0, commentsPerPage, setVisibleComments);
   }, []);
-
-  useEffect(() => {
-    // 스크롤 이벤트 리스너를 등록합니다.
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      // 컴포넌트가 언마운트 될 때 이벤트 리스너를 해제합니다.
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [startIndex]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentInput(e.target.value);
@@ -182,16 +174,25 @@ export default function CampingReviewPage() {
     handleScroll();
   };
 
-  const handleScroll = () => {
-    // 스크롤을 감지하여 하단에 도달하면 추가 댓글을 불러옵니다.
+  const handleScroll = throttle(() => {
+    // 스크롤을 감지하여 하단에 도달하면 추가 댓글을 불러옴
     if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
+      window.innerHeight + document.documentElement.scrollTop >=
+      document.documentElement.scrollHeight * 0.95
     ) {
       getComments(startIndex, commentsPerPage, setVisibleComments);
       setStartIndex((prevStartIndex) => prevStartIndex + commentsPerPage);
     }
-  };
+  }, 1000);
+
+  useEffect(() => {
+    // 스크롤 이벤트 리스너
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      // 컴포넌트가 언마운트 될 때 이벤트 리스너를 해제
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [startIndex, handleScroll]);
 
   return (
     <div className={`${styles.reviewContainer} rounded mb-5`}>

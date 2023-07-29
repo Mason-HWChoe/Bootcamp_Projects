@@ -17,6 +17,7 @@
     "date-fns": "^2.30.0",
     "firebase": "^9.23.0",
     "leaflet": "^1.9.4",
+    "lodash": "^4.17.21",
     "openai": "^3.3.0",
     "react": "^18.2.0",
     "react-calendar": "^4.3.0",
