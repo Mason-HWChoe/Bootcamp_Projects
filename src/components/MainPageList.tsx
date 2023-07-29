@@ -25,7 +25,6 @@ export default function MainPageList() {
     if (data.length > 0) {
       const randomCount = 12;
       const randomIndexs = getRandomNumber(randomCount, data.length);
-      console.log(randomIndexs);
       const randomItems = randomIndexs.map((index) => data[index]);
       setRandomData(randomItems);
     }
