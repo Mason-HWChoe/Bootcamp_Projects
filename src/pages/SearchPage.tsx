@@ -32,8 +32,6 @@ export default function SearchPage() {
     }
   }, [totalCount]);
 
-  console.log(totalPages);
-
   const [datas, setDatas] = useState<Item[]>(data);
   const [filteredData, setFilteredData] = useState<Item[]>([]);
   const [isSearching, setIsSearching] = useState(false);
