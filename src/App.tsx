@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ScrollToTop from './Util/ScrollToTop';
 import Nav from './components/Nav';
 import AIPage from './pages/AIPage';
 import DetailPage from './pages/DetailPage';
@@ -15,6 +16,7 @@ import { UserProviderStore } from './store/UserContext';
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <UserProviderStore>
         <Nav />
         <SelectedDataStore>
