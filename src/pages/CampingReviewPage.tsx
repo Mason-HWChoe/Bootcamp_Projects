@@ -3,12 +3,14 @@ import {
   DataSnapshot,
   get,
   getDatabase,
+  off,
   push,
   ref,
   set,
 } from 'firebase/database';
 import { throttle } from 'lodash';
 import { useContext, useEffect, useState } from 'react';
+import { useSelectedDataContext } from '../store/SelectedItemsContext';
 import UserContext from '../store/UserContext';
 import styles from './CampingReviewPage.module.css';
 
@@ -32,62 +34,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase();
 
-const addComment = (comment: string, userDisplayName: string | undefined) => {
-  if (userDisplayName) {
-    const newCommentRef = push(ref(database, 'comments'));
-    set(newCommentRef, {
-      nickname: userDisplayName,
-      content: comment,
-      date: new Date().toISOString(),
-    });
-  }
-};
-
-// 댓글을 가져오는 함수
-const getComments = async (
-  startIndex: number,
-  commentsPerPage: number,
-  setVisibleComments: React.Dispatch<React.SetStateAction<Comment[]>>,
-) => {
-  const snapshot = await get(ref(database, 'comments'));
-  const comments: Comment[] = [];
-  snapshot.forEach((childSnapshot: DataSnapshot) => {
-    const comment = childSnapshot.val() as Comment;
-    comments.push(comment);
-  });
-
-  // 댓글을 날짜 기준으로 내림차순으로 정렬
-  comments.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
-
-  // startIndex와 commentsPerPage를 사용하여 보여줄 댓글을 slice
-  const visibleCommentsSlice = comments.slice(
-    startIndex,
-    startIndex + commentsPerPage,
-  );
-
-  // 가져온 댓글을 visibleComments 상태에 업데이트
-  setVisibleComments((prevComments) => {
-    const existingComments = prevComments.filter(
-      (comment) => !visibleCommentsSlice.find((c) => c.date === comment.date),
-    );
-    return [...existingComments, ...visibleCommentsSlice];
-  });
-};
-
-const formatDate = (date: string) => {
-  const parsedDate = new Date(date);
-  const year = parsedDate.getFullYear();
-  const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
-  const day = String(parsedDate.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-const convertDateToValidPath = (date: string) => {
-  return date.replace(/[.:]/g, '_');
-};
-
 export default function CampingReviewPage() {
   const [commentInput, setCommentInput] = useState('');
   const { user } = useContext(UserContext);
@@ -98,10 +44,83 @@ export default function CampingReviewPage() {
 
   const commentsPerPage = 5;
 
+  const { selectedData } = useSelectedDataContext();
+
+  const addComment = (comment: string, userDisplayName: string | undefined) => {
+    if (userDisplayName && selectedData?.contentId) {
+      const newCommentRef = push(
+        ref(database, `comments/${selectedData.contentId}`),
+      );
+      set(newCommentRef, {
+        nickname: userDisplayName,
+        content: comment,
+        date: new Date().toISOString(),
+      });
+    }
+  };
+
+  // 댓글을 가져오는 함수
+  const getComments = async (
+    startIndex: number,
+    commentsPerPage: number,
+    setVisibleComments: React.Dispatch<React.SetStateAction<Comment[]>>,
+  ) => {
+    if (selectedData?.contentId) {
+      const snapshot = await get(
+        ref(database, `comments/${selectedData.contentId}`),
+      );
+      const comments: Comment[] = [];
+      snapshot.forEach((childSnapshot: DataSnapshot) => {
+        const comment = childSnapshot.val() as Comment;
+        comments.push(comment);
+      });
+
+      // 댓글을 날짜 기준으로 내림차순으로 정렬
+      comments.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
+
+      // startIndex와 commentsPerPage를 사용하여 보여줄 댓글을 slice
+      const visibleCommentsSlice = comments.slice(
+        startIndex,
+        startIndex + commentsPerPage,
+      );
+
+      // 가져온 댓글을 visibleComments 상태에 업데이트
+      setVisibleComments((prevComments) => {
+        const existingComments = prevComments.filter(
+          (comment) =>
+            !visibleCommentsSlice.find((c) => c.date === comment.date),
+        );
+        return [...existingComments, ...visibleCommentsSlice];
+      });
+    }
+  };
+
+  const formatDate = (date: string) => {
+    const parsedDate = new Date(date);
+    const year = parsedDate.getFullYear();
+    const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(parsedDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const convertDateToValidPath = (date: string) => {
+    return date.replace(/[.:]/g, '_');
+  };
+
   useEffect(() => {
     // 페이지 로드 시 댓글 데이터를 가져와서 설정
     getComments(0, commentsPerPage, setVisibleComments);
-  }, []);
+
+    return () => {
+      // 컴포넌트가 언마운트 될 때 이벤트 리스너를 해제
+      if (selectedData?.contentId) {
+        const commentsRef = ref(database, `comments/${selectedData.contentId}`);
+        off(commentsRef);
+      }
+    };
+  }, [selectedData, commentsPerPage]);
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCommentInput(e.target.value);
